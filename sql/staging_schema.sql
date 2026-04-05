@@ -1,12 +1,12 @@
 CREATE TABLE staging_books (
-    ISBN VARCHAR(20),
-    book_title VARCHAR(1000),
-    book_author VARCHAR(1000),
-    year_of_publication VARCHAR(1000),
-    publisher VARCHAR(1000),
-    image_url_s VARCHAR(1000),
-    image_url_m VARCHAR(1000),
-    image_url_l VARCHAR(1000)
+    ISBN VARCHAR(20) NOT NULL UNIQUE,
+    book_title VARCHAR NOT NULL,
+    book_author VARCHAR,
+    year_of_publication VARCHAR,
+    publisher VARCHAR,
+    image_url_s VARCHAR,
+    image_url_m VARCHAR,
+    image_url_l VARCHAR
 );
 
 CREATE TABLE staging_users (
