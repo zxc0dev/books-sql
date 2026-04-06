@@ -11,10 +11,10 @@ CREATE TABLE publishers (
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     ISBN VARCHAR(20) NOT NULL UNIQUE,
-    book_title VARCHAR NOT NULL,
-    author_id INT,
+    book_title VARCHAR(255) NOT NULL,
+    author_id INT NOT NULL,
     year_published INT,
-    publisher_id INT,
+    publisher_id INT NOT NULL,
 
     FOREIGN KEY (author_id) REFERENCES authors(id),
     FOREIGN KEY (publisher_id) REFERENCES publishers(id)
@@ -24,7 +24,6 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     location VARCHAR(255),
     age FLOAT CHECK (age >= 0)
-
 );
 
 CREATE TABLE ratings (

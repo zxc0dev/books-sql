@@ -4,4 +4,6 @@ INSERT INTO users (id, location, age)
         location,
         NULLIF(CAST(age AS FLOAT), 0)
     FROM
-        staging_users;
+        staging_users
+    WHERE
+        user_id IS NOT NULL;

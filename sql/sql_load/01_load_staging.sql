@@ -1,5 +1,5 @@
-COPY staging_books FROM 'D:\projects\sql-books\data\01_raw\Books.csv' DELIMITER ',' CSV HEADER;
+COPY staging_books FROM 'D:\projects\sql-books\data\02_processed\books_good.csv' DELIMITER ',' CSV HEADER;
 
-COPY staging_users FROM 'D:\projects\sql-books\data\01_raw\Users.csv' DELIMITER ',' CSV HEADER;
+COPY staging_users FROM 'D:\projects\sql-books\data\02_processed\users_good.csv' DELIMITER ',' CSV HEADER;
 
-COPY staging_ratings FROM 'D:\projects\sql-books\data\01_raw\Ratings.csv' DELIMITER ',' CSV HEADER;
+COPY staging_ratings FROM 'D:\projects\sql-books\data\02_processed\ratings_good.csv' DELIMITER ',' CSV HEADER;
