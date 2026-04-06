@@ -10,4 +10,3 @@ INSERT INTO books (isbn, book_title, author_id, year_published, publisher_id)
     LEFT JOIN publishers p ON p.publisher_name = s.publisher
     WHERE s.ISBN IS NOT NULL
       AND s.book_title IS NOT NULL
-      AND s.year_of_publication ~ '^\d+$';

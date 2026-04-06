@@ -1,6 +1,6 @@
 CREATE TABLE staging_books (
-    ISBN VARCHAR(20) NOT NULL UNIQUE,
-    book_title VARCHAR NOT NULL,
+    ISBN VARCHAR,
+    book_title VARCHAR,
     book_author VARCHAR,
     year_of_publication VARCHAR,
     publisher VARCHAR,
@@ -11,12 +11,12 @@ CREATE TABLE staging_books (
 
 CREATE TABLE staging_users (
     user_id INT,
-    location VARCHAR(1000),
+    location VARCHAR,
     age FLOAT
 );
 
 CREATE TABLE staging_ratings (
     user_id INT,
-    ISBN VARCHAR(1000),
+    ISBN VARCHAR,
     rating SMALLINT
 );
