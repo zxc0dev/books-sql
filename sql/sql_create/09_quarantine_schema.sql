@@ -14,7 +14,7 @@ CREATE TABLE quarantine_books (
 CREATE TABLE quarantine_users (
     user_id INT,
     location VARCHAR,
-    age FLOAT,
+    age INT,
     reason VARCHAR(500),
     quarantined_at TIMESTAMP DEFAULT NOW()
 );

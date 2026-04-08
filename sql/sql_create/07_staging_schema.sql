@@ -12,7 +12,7 @@ CREATE TABLE staging_books (
 CREATE TABLE staging_users (
     user_id INT,
     location VARCHAR,
-    age FLOAT
+    age INT
 );
 
 CREATE TABLE staging_ratings (
