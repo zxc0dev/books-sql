@@ -1,7 +1,7 @@
 from src.config import (DB_CREATED, DB_MAIN, SQL_CREATE, SQL_INDEXES, SQL_TRIGGERS, SQL_VIEWS)
 
 from sqlalchemy import text
-from src.db import execute_sql_file
+from src.sql_execute import execute_sql_file
 from src.logger import get_logger
 from sqlalchemy import create_engine
 

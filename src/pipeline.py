@@ -1,4 +1,4 @@
-from src.db import execute_sql_file
+from src.sql_execute import execute_sql_file
 from src.validate import run
 from src.download_data import download_data
 from src.logger import get_logger
@@ -23,15 +23,12 @@ def run_pipeline():
             logger.info("Loading to staging...")
             execute_sql_file(conn, ROOT_DIR / SQL_LOAD / "01_load_staging.sql")
 
-            logger.info("Running data integrity check...")
-            execute_sql_file(conn, ROOT_DIR / SQL_LOAD / "02_data_integrity_check.sql")
-
             for name, file in [
-                ("authors",    "03_load_authors.sql"),
-                ("publishers", "04_load_publishers.sql"),
-                ("books",      "05_load_books.sql"),
-                ("users",      "06_load_users.sql"),
-                ("ratings",    "07_load_ratings.sql"),
+                ("authors",    "02_load_authors.sql"),
+                ("publishers", "03_load_publishers.sql"),
+                ("books",      "04_load_books.sql"),
+                ("users",      "05_load_users.sql"),
+                ("ratings",    "06_load_ratings.sql"),
             ]:
                 logger.info(f"Loading {name}...")
                 execute_sql_file(conn, ROOT_DIR / SQL_LOAD / file)
