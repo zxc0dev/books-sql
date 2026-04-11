@@ -1,0 +1,1 @@
+TRUNCATE TABLE staging_books, staging_ratings, staging_users;
