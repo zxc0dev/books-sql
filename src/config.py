@@ -34,13 +34,13 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT_DIR / "data" / "01_raw"
 PROCESSED_DIR = ROOT_DIR / "data" / "02_processed"
 QUARANTINE_DIR = ROOT_DIR / "data" / "02_quarantine"
-LOG_FILE = ROOT_DIR / "logs" / f"pipeline_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
+LOG_FILE = ROOT_DIR / "logs" / f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
-SQL_LOAD     = ROOT_DIR / "sql" / "sql_load"
-SQL_CREATE   = ROOT_DIR / "sql" / "sql_create"
-SQL_INDEXES  = ROOT_DIR / "sql" / "sql_indexes"
+SQL_LOAD = ROOT_DIR / "sql" / "sql_load"
+SQL_CREATE = ROOT_DIR / "sql" / "sql_create"
+SQL_INDEXES = ROOT_DIR / "sql" / "sql_indexes"
 SQL_TRIGGERS = ROOT_DIR / "sql" / "sql_triggers"
-SQL_VIEWS    = ROOT_DIR / "sql" / "sql_views"
+SQL_VIEWS = ROOT_DIR / "sql" / "sql_views"
 
 CURRENT_YEAR = pd.Timestamp.now().year
 ISBN_REGEX = r"[\dX\-]{8,13}"
