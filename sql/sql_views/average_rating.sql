@@ -1,3 +1,4 @@
+CREATE VIEW average_rating AS
 SELECT 
     b.id,
     b.book_title,
