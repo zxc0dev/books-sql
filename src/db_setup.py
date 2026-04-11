@@ -1,4 +1,4 @@
-from src.config import (DB_CREATED, DB_MAIN, SQL_CREATE, SQL_INDEXES, SQL_TRIGGERS)
+from src.config import (DB_CREATED, DB_MAIN, SQL_CREATE, SQL_INDEXES, SQL_TRIGGERS, SQL_VIEWS)
 
 from sqlalchemy import text
 from src.db import execute_sql_file
@@ -36,6 +36,10 @@ def create_tables():
 
         for script in sorted(SQL_TRIGGERS.glob("*.sql")):
             logger.info(f"Creating trigger: {script.name}")
+            execute_sql_file(conn, script)
+
+        for script in sorted(SQL_VIEWS.glob("*.sql")):
+            logger.info(f"Creating view: {script.name}")
             execute_sql_file(conn, script)
 
         conn.commit()
