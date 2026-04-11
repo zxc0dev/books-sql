@@ -4,7 +4,7 @@ from .logger import get_logger
 
 from .config import (
     RAW_DIR, PROCESSED_DIR, QUARANTINE_DIR,
-    LOG_FILE, CURRENT_YEAR, ISBN_REGEX, ASIN_REGEX,
+    CURRENT_YEAR, ISBN_REGEX, ASIN_REGEX,
 )
 
 

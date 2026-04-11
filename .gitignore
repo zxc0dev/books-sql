@@ -4,4 +4,4 @@ data/
 src/__pycache__
 .env
 venv/
-pipeline.log
+*pipeline*.log

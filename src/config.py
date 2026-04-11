@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import pandas as pd
+from datetime import datetime
+from sqlalchemy.engine import URL
 
 load_dotenv()
 
@@ -14,15 +16,32 @@ DB_CONFIG = {
     "password": os.getenv("DB_PASSWORD"),
 }
 
+def make_url(database):
+    return URL.create(
+        drivername="postgresql+psycopg2",
+        username=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
+        host=DB_CONFIG["host"],
+        port=DB_CONFIG["port"],
+        database=database,
+    )
+
+DB_MAIN = make_url(DB_CONFIG["main_dbname"])
+DB_CREATED = make_url(DB_CONFIG["created_dbname"])
+
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
 RAW_DIR = ROOT_DIR / "data" / "01_raw"
 PROCESSED_DIR = ROOT_DIR / "data" / "02_processed"
 QUARANTINE_DIR = ROOT_DIR / "data" / "02_quarantine"
-LOG_FILE = ROOT_DIR / "pipeline.log"
+LOG_FILE = ROOT_DIR / "logs" / f"pipeline_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
+
+SQL_LOAD = "sql/sql_load"     
+SQL_CREATE = "sql/sql_create"
 
 CURRENT_YEAR = pd.Timestamp.now().year
 ISBN_REGEX = r"[\dX\-]{8,13}"
 ASIN_REGEX = r"B[\dA-Z]{9}"
 
 DOWNLOAD_PATH = "arashnic/book-recommendation-dataset"
+
