@@ -2,3 +2,5 @@ book-recommendation-dataset/
 books_sql.egg-info
 data/
 src/__pycache__
+.env
+venv/
