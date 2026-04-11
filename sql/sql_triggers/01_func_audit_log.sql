@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fn_audit_log()
+CREATE OR REPLACE FUNCTION func_audit_log()
 RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit_log (
