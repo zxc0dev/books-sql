@@ -1,3 +1,10 @@
+DROP TABLE IF EXISTS authors CASCADE;
+DROP TABLE IF EXISTS publishers CASCADE;
+DROP TABLE IF EXISTS books CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS ratings CASCADE;
+DROP TABLE IF EXISTS audit_log CASCADE;
+
 CREATE TABLE authors (
     id SERIAL PRIMARY KEY,
     author_name VARCHAR(500) NOT NULL
@@ -46,9 +53,14 @@ CREATE TABLE ratings (
 
 );
 
-
--- Indexes for the main tables to improve query performance 
-CREATE INDEX idx_books_author_id ON books(author_id);
-CREATE INDEX idx_books_publisher_id ON books(publisher_id);
-CREATE INDEX idx_ratings_user_id ON ratings(user_id);
-CREATE INDEX idx_ratings_book_id ON ratings(book_id);
+CREATE TABLE audit_log (
+    id SERIAL PRIMARY KEY,
+    entity_table VARCHAR(50) NOT NULL,
+    entity_id INT NOT NULL,
+    action VARCHAR(10) NOT NULL CHECK (action IN ('INSERT','UPDATE','DELETE')),
+    changed_by INT,
+    changed_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    old_data JSONB,
+    new_data JSONB,
+    ip_address INET
+);

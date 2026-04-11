@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS quarantine_books;
+DROP TABLE IF EXISTS quarantine_users;
+DROP TABLE IF EXISTS quarantine_ratings;
+
 CREATE TABLE quarantine_books (
     ISBN VARCHAR,
     book_title VARCHAR,

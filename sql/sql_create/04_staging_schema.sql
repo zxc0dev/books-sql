@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS staging_books;
+DROP TABLE IF EXISTS staging_users;
+DROP TABLE IF EXISTS staging_ratings;
+
 CREATE TABLE staging_books (
     ISBN VARCHAR,
     book_title VARCHAR,
