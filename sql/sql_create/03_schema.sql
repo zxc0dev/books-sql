@@ -32,7 +32,7 @@ CREATE TABLE books (
 );
 
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id PRIMARY KEY,
     location VARCHAR(500),
     age INT CHECK (age >= 0)
 );
