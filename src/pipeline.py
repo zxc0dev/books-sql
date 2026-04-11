@@ -1,4 +1,3 @@
-from pathlib import Path
 from src.db import execute_sql_file
 from src.validate import run
 from src.download_data import download_data
