@@ -41,6 +41,7 @@ SQL_CREATE = ROOT_DIR / "sql" / "sql_create"
 SQL_INDEXES = ROOT_DIR / "sql" / "sql_indexes"
 SQL_TRIGGERS = ROOT_DIR / "sql" / "sql_triggers"
 SQL_VIEWS = ROOT_DIR / "sql" / "sql_views"
+SQL_CLEANUP = ROOT_DIR / "sql" / "sql_cleanup"
 
 CURRENT_YEAR = pd.Timestamp.now().year
 ISBN_REGEX = r"[\dX\-]{8,13}"
