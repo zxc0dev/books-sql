@@ -1,5 +1,7 @@
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+import pandas as pd
 
 load_dotenv()
 
@@ -12,5 +14,13 @@ DB_CONFIG = {
     "password": os.getenv("DB_PASSWORD"),
 }
 
-DATA_DIR = "data/"
-RAW_DIR  = "data/raw/"
+ROOT_DIR = Path(__file__).resolve().parent.parent
+
+RAW_DIR = ROOT_DIR / "data" / "01_raw"
+PROCESSED_DIR = ROOT_DIR / "data" / "02_processed"
+QUARANTINE_DIR = ROOT_DIR / "data" / "02_quarantine"
+LOG_FILE = ROOT_DIR / "pipeline.log"
+
+CURRENT_YEAR = pd.Timestamp.now().year
+ISBN_REGEX = r"[\dX\-]{8,13}"
+ASIN_REGEX = r"B[\dA-Z]{9}"
