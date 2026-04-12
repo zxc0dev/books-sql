@@ -19,5 +19,3 @@ docs/partial_parse.msgpack
 docs/run_results.json
 docs/graph_summary.json
 docs/semantic_manifest.json
-
-dbt/package-lock.yml
