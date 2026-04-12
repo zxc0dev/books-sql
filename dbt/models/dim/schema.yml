@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: dim_authors
+    columns:
+      - name: author_id
+        tests:
+          - not_null
+          - unique
+      - name: author_name
+        tests:
+          - not_null
+
+  - name: dim_publishers
+    columns:
+      - name: publisher_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_books
+    columns:
+      - name: book_id
+        tests:
+          - not_null
+          - unique
+      - name: isbn
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_users
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique

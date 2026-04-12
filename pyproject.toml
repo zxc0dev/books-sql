@@ -17,7 +17,8 @@ dependencies = [
     "pgspecial",
     "psycopg2-binary",
     "python-dotenv",
-    "prefect"
+    "prefect",
+    "dbt-postgres>=1.7"
 ]
  
 [project.optional-dependencies]

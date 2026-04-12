@@ -1,0 +1,21 @@
+name: books
+version: 1.0.0
+profile: books
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  books:
+    staging:
+      +materialized: view
+      +schema: staging
+    dim:
+      +materialized: table
+      +schema: dim
+    fact:
+      +materialized: table
+      +schema: fact
+    marts:
+      +materialized: view
+      +schema: marts

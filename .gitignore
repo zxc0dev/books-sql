@@ -4,5 +4,20 @@ data/
 *__pycache__*
 .env
 venv/
-*.log
+/logs/
 build/
+
+# dbt
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+
+# docs
+docs/compiled/
+docs/graph.gpickle
+docs/partial_parse.msgpack
+docs/run_results.json
+docs/graph_summary.json
+docs/semantic_manifest.json
+
+dbt/package-lock.yml

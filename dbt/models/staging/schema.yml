@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_books
+    columns:
+      - name: isbn
+        tests:
+          - not_null
+          - unique
+      - name: title
+        tests:
+          - not_null
+      - name: author
+        tests:
+          - not_null
+
+  - name: stg_users
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_ratings
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+      - name: isbn
+        tests:
+          - not_null
+      - name: rating
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0,1,2,3,4,5,6,7,8,9,10]

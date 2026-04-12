@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: avg_rating
+    columns:
+      - name: book_id
+        tests:
+          - not_null
+          - unique
