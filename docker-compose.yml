@@ -7,31 +7,39 @@ services:
       POSTGRES_DB: ${MAIN_DB_NAME}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 5s
       retries: 5
 
-  db-init:
+  db_init:
     build: .
-    command: python -c "from src.db_init.db_setup import create_database, create_tables; create_database(); create_tables()"
+    command: >
+      python -c "
+      from src.db_init.db_setup import create_database, create_tables;
+      create_database();
+      create_tables()
+      "
     depends_on:
       db:
         condition: service_healthy
     env_file: .env
+    restart: "no"
 
-  app:
+  pipeline:
     build: .
+    command: python -m src.pipeline
     depends_on:
-      db-init:
+      db_init:
         condition: service_completed_successfully
     env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./dbt:/app/dbt
+    restart: "no"
 
-  dbt:
-    build:
-      context: .
-      dockerfile: dockerfile.dbt
-    depends_on:
-      app:
-        condition: service_completed_successfully
-    env_file: .env
+volumes:
+  postgres_data:
