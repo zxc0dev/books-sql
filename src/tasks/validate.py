@@ -4,6 +4,7 @@ from prefect import task
 from src.utils.logger import get_logger
 from src.config.constants import CURRENT_YEAR, ISBN_REGEX, ASIN_REGEX
 from src.config.paths import RAW_DIR, PROCESSED_DIR, QUARANTINE_DIR
+from prefect.cache_policies import NO_CACHE
 
 logger = get_logger(__name__)
 
@@ -244,6 +245,12 @@ def _export(
 ) -> None:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
+
+    ts = pd.Timestamp.now()
+    books_bad["quarantined_at"]   = ts
+    users_bad["quarantined_at"]   = ts
+    ratings_bad["quarantined_at"] = ts
+
     books_clean.to_csv(   PROCESSED_DIR  / "books_good.csv",        index=False)
     users_clean.to_csv(   PROCESSED_DIR  / "users_good.csv",        index=False)
     ratings_clean.to_csv( PROCESSED_DIR  / "ratings_good.csv",      index=False)
@@ -280,7 +287,7 @@ def _log_summary(
 
 # 8. RUN
 
-@task(name="validate-data")
+@task(name="validate-data", cache_policy=NO_CACHE)
 def validate(export_results: bool = True):
     logger.info("=== VALIDATION PIPELINE START ===")
 

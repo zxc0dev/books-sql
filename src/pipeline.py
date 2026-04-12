@@ -4,7 +4,8 @@ from src.config.config import DB_CREATED
 from src.config.constants import DOWNLOAD_PATH
 from src.tasks.download import download
 from src.tasks.validate import validate
-from src.tasks.load import load, cleanup
+from src.tasks.load import load_staging, cleanup, load_quarantine
+from src.tasks.dbt import dbt_run, dbt_test
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -14,19 +15,13 @@ def run_pipeline():
     logger.info("=== Pipeline started ===")
 
     download(DOWNLOAD_PATH)
-    validate()
 
     engine = create_engine(DB_CREATED)
-    with engine.connect() as conn:
-        try:
-            load(conn)
-            cleanup(conn)
-            conn.commit()
-            logger.info("=== Pipeline completed successfully ===")
-        except Exception as e:
-            conn.rollback()
-            logger.exception(f"Pipeline failed: {e}")
-            raise
+    validate(engine)
+    load_staging(engine)
+    load_quarantine(engine)
+    dbt_run()
+    dbt_test()
+    cleanup(engine)
 
-if __name__ == "__main__":
-    run_pipeline()
+    logger.info("=== Pipeline completed successfully ===")

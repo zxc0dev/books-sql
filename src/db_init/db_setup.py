@@ -1,5 +1,5 @@
 from src.config.config import DB_CREATED, DB_MAIN
-from src.config.sql import SQL_CREATE, SQL_INDEXES, SQL_TRIGGERS, SQL_VIEWS
+from src.config.sql import SQL_CREATE,  SQL_INDEXES, SQL_TRIGGERS
 
 from sqlalchemy import text, create_engine
 from src.utils.sql_execute import execute_sql_file
@@ -26,26 +26,20 @@ def create_database():
 def create_tables():
     engine = create_engine(DB_CREATED)
     with engine.connect() as conn:
-
-        for script in ["03_schema.sql", "04_staging_schema.sql", "05_quarantine_schema.sql"]:
+        for script in ["01_schema.sql", "02_raw_schema.sql", "03_quarantine_schema.sql"]:
             logger.info(f"Running {script}...")
             execute_sql_file(conn, SQL_CREATE / script)
 
-        for script in sorted(SQL_INDEXES.glob("*.sql")):
+        for script in sorted(p for p in SQL_INDEXES.iterdir() if p.name.endswith(".sql")):
             logger.info(f"Creating index: {script.name}")
             execute_sql_file(conn, script)
 
-        for script in sorted(SQL_TRIGGERS.glob("*.sql")):
+        for script in sorted(p for p in SQL_TRIGGERS.iterdir() if p.name.endswith(".sql")):
             logger.info(f"Creating trigger: {script.name}")
-            execute_sql_file(conn, script)
-
-        for script in sorted(SQL_VIEWS.glob("*.sql")):
-            logger.info(f"Creating view: {script.name}")
             execute_sql_file(conn, script)
 
         conn.commit()
         logger.info("=== Schema setup complete ===")
-
 
 if __name__ == "__main__":
     create_database()

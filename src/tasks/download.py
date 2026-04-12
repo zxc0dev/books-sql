@@ -6,7 +6,7 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-@task(name="download-data")
+@task(name="download-data", retries=3, retry_delay_seconds=10)
 def download(dataset_path: str, force: bool = False):
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
