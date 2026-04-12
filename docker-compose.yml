@@ -26,3 +26,12 @@ services:
       db-init:
         condition: service_completed_successfully
     env_file: .env
+
+  dbt:
+    build:
+      context: .
+      dockerfile: dockerfile.dbt
+    depends_on:
+      app:
+        condition: service_completed_successfully
+    env_file: .env

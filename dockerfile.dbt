@@ -1,0 +1,5 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .
+RUN pip install dbt-postgres
+CMD ["dbt", "run", "--project-dir", "dbt", "--profiles-dir", "dbt"]
