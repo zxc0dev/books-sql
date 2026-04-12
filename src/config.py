@@ -36,12 +36,14 @@ PROCESSED_DIR = ROOT_DIR / "data" / "02_processed"
 QUARANTINE_DIR = ROOT_DIR / "data" / "02_quarantine"
 LOG_FILE = ROOT_DIR / "logs" / f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
-SQL_LOAD = ROOT_DIR / "sql" / "sql_load"
-SQL_CREATE = ROOT_DIR / "sql" / "sql_create"
-SQL_INDEXES = ROOT_DIR / "sql" / "sql_indexes"
-SQL_TRIGGERS = ROOT_DIR / "sql" / "sql_triggers"
-SQL_VIEWS = ROOT_DIR / "sql" / "sql_views"
-SQL_CLEANUP = ROOT_DIR / "sql" / "sql_cleanup"
+_PKG_DIR = Path(__file__).resolve().parent
+
+SQL_LOAD = _PKG_DIR / "sql" / "sql_load"
+SQL_CREATE = _PKG_DIR / "sql" / "sql_create"
+SQL_INDEXES = _PKG_DIR / "sql" / "sql_indexes"
+SQL_TRIGGERS = _PKG_DIR / "sql" / "sql_triggers"
+SQL_VIEWS = _PKG_DIR / "sql" / "sql_views"
+SQL_CLEANUP = _PKG_DIR / "sql" / "sql_cleanup"
 
 CURRENT_YEAR = pd.Timestamp.now().year
 ISBN_REGEX = r"[\dX\-]{8,13}"

@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = [
     { name = "zxc0.dev" }
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "pandas>=2.0,<3",
     "missingno>=0.5,<1",
