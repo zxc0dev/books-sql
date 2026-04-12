@@ -8,7 +8,7 @@
 SELECT
     {{ dbt_utils.generate_surrogate_key(['s.isbn']) }} AS book_id,
     s.isbn,
-    s.title         AS book_title,
+    s.title AS book_title,
     a.author_id,
     p.publisher_id,
     s.year_of_publication AS year_published

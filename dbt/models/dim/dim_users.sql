@@ -7,7 +7,7 @@
 
 SELECT
     {{ dbt_utils.generate_surrogate_key(['id']) }} AS user_id,
-    id       AS source_id,
+    id AS source_id,
     location,
     age
 FROM {{ ref('stg_users') }}

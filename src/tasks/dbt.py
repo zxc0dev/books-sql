@@ -19,6 +19,11 @@ def _run_dbt(command: str):
         logger.error(result.stderr)
         raise RuntimeError(f"dbt {command} failed")
 
+@task(name="dbt-deps", cache_policy=NO_CACHE)
+def dbt_deps():
+    logger.info("Installing dbt packages...")
+    _run_dbt("deps")
+
 @task(name="dbt-run", cache_policy=NO_CACHE)
 def dbt_run():
     logger.info("Running dbt models...")

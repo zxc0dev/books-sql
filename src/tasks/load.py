@@ -16,19 +16,19 @@ def _copy_csv(raw_conn, table: str, csv_path):
         )
     logger.info(f"Loaded {table} from {csv_path.name}")
 
-@task(name="load-staging", cache_policy=NO_CACHE)
+@task(name="load-raw", cache_policy=NO_CACHE)
 def load_staging(engine):
     logger.info("Loading CSVs into staging...")
     raw_conn = engine.raw_connection()
     try:
-        _copy_csv(raw_conn, "raw_books",    PROCESSED_DIR / "books_good.csv")
-        _copy_csv(raw_conn, "raw_users",    PROCESSED_DIR / "users_good.csv")
-        _copy_csv(raw_conn, "raw_ratings",  PROCESSED_DIR / "ratings_good.csv")
+        _copy_csv(raw_conn, "raw.raw_books",    PROCESSED_DIR / "books_good.csv")
+        _copy_csv(raw_conn, "raw.raw_users",    PROCESSED_DIR / "users_good.csv")
+        _copy_csv(raw_conn, "raw.raw_ratings",  PROCESSED_DIR / "ratings_good.csv")
         raw_conn.commit()
-        logger.info("Staging loaded.")
+        logger.info("Raw loaded.")
     except Exception as e:
         raw_conn.rollback()
-        logger.exception(f"Staging load failed: {e}")
+        logger.exception(f"Raw load failed: {e}")
         raise
     finally:
         raw_conn.close()
@@ -38,9 +38,9 @@ def load_quarantine(engine):
     logger.info("Loading CSVs into quarantine...")
     raw_conn = engine.raw_connection()
     try:
-        _copy_csv(raw_conn, "quarantine_books",    QUARANTINE_DIR / "books_quarantine.csv")
-        _copy_csv(raw_conn, "quarantine_users",    QUARANTINE_DIR / "users_quarantine.csv")
-        _copy_csv(raw_conn, "quarantine_ratings",  QUARANTINE_DIR / "ratings_quarantine.csv")
+        _copy_csv(raw_conn, "quarantine.quarantine_books",    QUARANTINE_DIR / "books_quarantine.csv")
+        _copy_csv(raw_conn, "quarantine.quarantine_users",    QUARANTINE_DIR / "users_quarantine.csv")
+        _copy_csv(raw_conn, "quarantine.quarantine_ratings",  QUARANTINE_DIR / "ratings_quarantine.csv")
         raw_conn.commit()
         logger.info("Quarantine loaded.")
     except Exception as e:
@@ -57,7 +57,7 @@ def cleanup(engine):
     raw_conn = engine.raw_connection()
     try:
         cursor = raw_conn.cursor()
-        cursor.execute("TRUNCATE TABLE raw_books, raw_users, raw_ratings")
+        cursor.execute("TRUNCATE TABLE raw.raw_books, raw.raw_users, raw.raw_ratings")
         raw_conn.commit()
     finally:
         raw_conn.close()

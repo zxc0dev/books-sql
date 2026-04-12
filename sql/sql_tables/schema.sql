@@ -1,11 +1,12 @@
 -- SCHEMAS
+CREATE SCHEMA IF NOT EXISTS raw;
 CREATE SCHEMA IF NOT EXISTS staging;
 CREATE SCHEMA IF NOT EXISTS dim;
 CREATE SCHEMA IF NOT EXISTS fact;
 CREATE SCHEMA IF NOT EXISTS marts;
 CREATE SCHEMA IF NOT EXISTS quarantine;
 
--- DIM TABLES (no dependencies)
+-- DIM TABLES
 CREATE TABLE IF NOT EXISTS dim.dim_authors (
     author_id    VARCHAR(32) PRIMARY KEY,
     author_name  VARCHAR(500) NOT NULL
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS dim.dim_books (
     year_published INT
 );
 
--- FACT TABLES (depends on dim)
+-- FACT TABLES
 CREATE TABLE IF NOT EXISTS fact.fact_ratings (
     rating_id VARCHAR(32) PRIMARY KEY,
     user_id   VARCHAR(32) NOT NULL REFERENCES dim.dim_users(user_id)   ON DELETE CASCADE ON UPDATE CASCADE,
@@ -52,4 +53,65 @@ CREATE TABLE IF NOT EXISTS public.audit_log (
     old_data     JSONB,
     new_data     JSONB,
     ip_address   INET
+);
+
+DROP TABLE IF EXISTS raw_books CASCADE;
+DROP TABLE IF EXISTS raw_users CASCADE;
+DROP TABLE IF EXISTS raw_ratings CASCADE;
+
+CREATE TABLE raw.raw_books (
+    ISBN VARCHAR,
+    book_title VARCHAR,
+    book_author VARCHAR,
+    year_of_publication VARCHAR,
+    publisher VARCHAR,
+    image_url_s VARCHAR,
+    image_url_m VARCHAR,
+    image_url_l VARCHAR
+);
+
+CREATE TABLE raw.raw_users (
+    user_id INT,
+    location VARCHAR,
+    age INT
+);
+
+CREATE TABLE raw.raw_ratings (
+    user_id INT,
+    ISBN VARCHAR,
+    rating SMALLINT
+);
+
+
+DROP TABLE IF EXISTS quarantine_books CASCADE;
+DROP TABLE IF EXISTS quarantine_users CASCADE;
+DROP TABLE IF EXISTS quarantine_ratings CASCADE;
+
+CREATE TABLE quarantine.quarantine_books (
+    ISBN VARCHAR,
+    book_title VARCHAR,
+    book_author VARCHAR,
+    year_of_publication VARCHAR,
+    publisher VARCHAR,
+    image_url_s VARCHAR,
+    image_url_m VARCHAR,
+    image_url_l VARCHAR,
+    reason VARCHAR(500),        
+    quarantined_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE quarantine.quarantine_users (
+    user_id INT,
+    location VARCHAR,
+    age INT,
+    reason VARCHAR(500),
+    quarantined_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE quarantine.quarantine_ratings (
+    user_id INT,
+    ISBN VARCHAR,
+    rating SMALLINT,
+    reason VARCHAR(500),
+    quarantined_at TIMESTAMP DEFAULT NOW()
 );
