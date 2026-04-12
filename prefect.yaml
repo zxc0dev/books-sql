@@ -1,0 +1,10 @@
+PREFECT_API_URL: ""
+PREFECT_SERVER_ANALYTICS_ENABLED: "false"
+
+logging:
+  level: INFO
+  handlers:
+    file:
+      class: logging.FileHandler
+      filename: logs/prefect.log
+      formatter: standard

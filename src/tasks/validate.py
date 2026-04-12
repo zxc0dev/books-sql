@@ -1,17 +1,11 @@
 import numpy as np
 import pandas as pd
-from .logger import get_logger
-
+from prefect import task
+from src.utils.logger import get_logger
 from src.config.constants import CURRENT_YEAR, ISBN_REGEX, ASIN_REGEX
 from src.config.paths import RAW_DIR, PROCESSED_DIR, QUARANTINE_DIR
 
-
-# LOGGING
-
 logger = get_logger(__name__)
-
-
-# SCHEMA
 
 SCHEMA: dict = {
     "books": [
@@ -158,31 +152,23 @@ def standardize(
 
 def _apply_schema(df: pd.DataFrame, rules: list) -> pd.Series:
     reason_parts = []
-
     for rule in rules:
         col     = rule["col"]
         mask_fn = rule["mask_fn"]
         message = rule["message"]
-
         if col not in df.columns:
             continue
-
         bad_mask = mask_fn(df[col])
-
         if callable(message):
             reasons = pd.Series("", index=df.index)
             reasons[bad_mask] = message(df.loc[bad_mask, col])
         else:
             reasons = pd.Series(np.where(bad_mask, message, ""), index=df.index)
-
         reason_parts.append(reasons)
-
     if not reason_parts:
         return pd.Series("", index=df.index)
-
     reason_df = pd.concat(reason_parts, axis=1)
     reason_df.columns = range(len(reason_df.columns))
-
     return (
         reason_df.stack()
                  .loc[lambda s: s != ""]
@@ -213,19 +199,15 @@ def _check_referential_integrity(
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     orphan_isbn_mask = ~ratings_clean["ISBN"].isin(books_clean["ISBN"])
     orphan_user_mask = ~ratings_clean["User-ID"].isin(users_clean["User-ID"])
-
     orphan_isbn           = ratings_clean[orphan_isbn_mask].copy()
     orphan_isbn["reason"] = "ISBN not found in books"
-
     orphan_user           = ratings_clean[orphan_user_mask & ~orphan_isbn_mask].copy()
     orphan_user["reason"] = "User-ID not found in users"
-
     logger.info(
         f"Referential integrity — "
         f"orphan ISBNs: {len(orphan_isbn):,}  "
         f"orphan users: {len(orphan_user):,}"
     )
-
     return (
         ratings_clean[~orphan_isbn_mask & ~orphan_user_mask].reset_index(drop=True),
         pd.concat([ratings_bad, orphan_isbn, orphan_user], ignore_index=True),
@@ -252,7 +234,7 @@ def _drop_duplicates(
 
 # 6. EXPORT
 
-def export(
+def _export(
     books_clean:   pd.DataFrame,
     users_clean:   pd.DataFrame,
     ratings_clean: pd.DataFrame,
@@ -262,14 +244,12 @@ def export(
 ) -> None:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
-
-    books_clean.to_csv(   PROCESSED_DIR  / "books_good.csv",         index=False)
-    users_clean.to_csv(   PROCESSED_DIR  / "users_good.csv",         index=False)
-    ratings_clean.to_csv( PROCESSED_DIR  / "ratings_good.csv",       index=False)
-    books_bad.to_csv(     QUARANTINE_DIR / "books_quarantine.csv",    index=False)
-    users_bad.to_csv(     QUARANTINE_DIR / "users_quarantine.csv",    index=False)
-    ratings_bad.to_csv(   QUARANTINE_DIR / "ratings_quarantine.csv",  index=False)
-
+    books_clean.to_csv(   PROCESSED_DIR  / "books_good.csv",        index=False)
+    users_clean.to_csv(   PROCESSED_DIR  / "users_good.csv",        index=False)
+    ratings_clean.to_csv( PROCESSED_DIR  / "ratings_good.csv",      index=False)
+    books_bad.to_csv(     QUARANTINE_DIR / "books_quarantine.csv",   index=False)
+    users_bad.to_csv(     QUARANTINE_DIR / "users_quarantine.csv",   index=False)
+    ratings_bad.to_csv(   QUARANTINE_DIR / "ratings_quarantine.csv", index=False)
     logger.info("Exported processed and quarantine files.")
 
 
@@ -298,10 +278,10 @@ def _log_summary(
             logger.info(f"  {count:>6,}x  {reason}")
 
 
-# RUN
+# 8. RUN
 
-def run(export_results: bool = True):
-
+@task(name="validate-data")
+def validate(export_results: bool = True):
     logger.info("=== VALIDATION PIPELINE START ===")
 
     books, users, ratings = load_data()
@@ -321,14 +301,10 @@ def run(export_results: bool = True):
     ratings_c, ratings_b = _drop_duplicates(ratings_c, ["User-ID", "ISBN"], ratings_b, "Duplicate (User-ID, ISBN)")
 
     if export_results:
-        export(books_c, users_c, ratings_c, books_b, users_b, ratings_b)
+        _export(books_c, users_c, ratings_c, books_b, users_b, ratings_b)
 
     _log_summary(books_c, users_c, ratings_c, books_b, users_b, ratings_b)
 
     logger.info("=== VALIDATION PIPELINE DONE ===")
 
     return books_c, users_c, ratings_c, books_b, users_b, ratings_b
-
-
-if __name__ == "__main__":
-    run()

@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from src.logger import get_logger
+from src.utils.logger import get_logger
 import re
 
 logger = get_logger(__name__)

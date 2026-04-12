@@ -1,17 +1,22 @@
 import shutil, zipfile, kagglehub
 from pathlib import Path
+from prefect import task
 from src.config.paths import RAW_DIR
+from src.utils.logger import get_logger
 
-def download_data(dataset_path: str, force: bool = False):
+logger = get_logger(__name__)
+
+@task(name="download-data")
+def download(dataset_path: str, force: bool = False):
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
     has_data = any(f for f in RAW_DIR.iterdir() if f.is_file() and not f.name.startswith('.'))
 
     if not force and has_data:
-        print(f"Data exists in {RAW_DIR}. Skipping.")
+        logger.info(f"Data exists in {RAW_DIR}. Skipping.")
         return
 
-    print(f"Downloading {dataset_path}...")
+    logger.info(f"Downloading {dataset_path}...")
     downloaded_path = Path(kagglehub.dataset_download(dataset_path, force_download=force))
 
     if downloaded_path.suffix == ".zip":
@@ -23,4 +28,4 @@ def download_data(dataset_path: str, force: bool = False):
     else:
         shutil.copy(downloaded_path, RAW_DIR)
 
-    print(f"Files saved to: {RAW_DIR}")
+    logger.info(f"Files saved to: {RAW_DIR}")

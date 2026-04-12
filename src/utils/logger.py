@@ -1,14 +1,14 @@
 import logging
 import os
-from contextlib import contextmanager
 from src.config.paths import LOG_FILE
 
 def _setup_root_logger():
     root = logging.getLogger()
-    if root.handlers:
-        return
-
     root.setLevel(logging.INFO)
+
+    # only skip if our FileHandler is already there
+    if any(isinstance(h, logging.FileHandler) for h in root.handlers):
+        return
 
     fmt = logging.Formatter(
         "%(asctime)s | %(levelname)-7s | %(name)s | %(message)s",
@@ -29,11 +29,3 @@ def _setup_root_logger():
 def get_logger(name: str) -> logging.Logger:
     _setup_root_logger()
     return logging.getLogger(name)
-
-@contextmanager
-def log_session():
-    _setup_root_logger()
-    try:
-        yield
-    finally:
-        logging.shutdown()

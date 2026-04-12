@@ -17,6 +17,7 @@ dependencies = [
     "pgspecial",
     "psycopg2-binary",
     "python-dotenv",
+    "prefect"
 ]
  
 [project.optional-dependencies]
