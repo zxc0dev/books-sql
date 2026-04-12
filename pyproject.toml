@@ -31,4 +31,6 @@ build-backend = "setuptools.build_meta"
  
 [tool.setuptools.packages.find]
 where = ["."]
-exclude = [".venv*", "data*", "notebooks*", "sql*"]
+
+[tool.setuptools.package-data]
+sql = ["**/*.sql"]

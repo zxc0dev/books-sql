@@ -1,7 +1,7 @@
 import logging
 import os
 from contextlib import contextmanager
-from src.config import LOG_FILE
+from src.config.paths import LOG_FILE
 
 def _setup_root_logger():
     root = logging.getLogger()

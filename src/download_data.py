@@ -1,14 +1,14 @@
 import shutil, zipfile, kagglehub
 from pathlib import Path
+from src.config.paths import RAW_DIR
 
 def download_data(dataset_path: str, force: bool = False):
-    raw_dir = Path(__file__).resolve().parents[1] / "data" / "01_raw"
-    raw_dir.mkdir(parents=True, exist_ok=True)
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-    has_data = any(f for f in raw_dir.iterdir() if f.is_file() and not f.name.startswith('.'))
+    has_data = any(f for f in RAW_DIR.iterdir() if f.is_file() and not f.name.startswith('.'))
 
     if not force and has_data:
-        print(f"Data exists in {raw_dir}. Skipping.")
+        print(f"Data exists in {RAW_DIR}. Skipping.")
         return
 
     print(f"Downloading {dataset_path}...")
@@ -16,11 +16,11 @@ def download_data(dataset_path: str, force: bool = False):
 
     if downloaded_path.suffix == ".zip":
         with zipfile.ZipFile(downloaded_path, "r") as z:
-            z.extractall(raw_dir)
+            z.extractall(RAW_DIR)
     elif downloaded_path.is_dir():
         for f in downloaded_path.iterdir():
-            if f.is_file(): shutil.copy(f, raw_dir)
+            if f.is_file(): shutil.copy(f, RAW_DIR)
     else:
-        shutil.copy(downloaded_path, raw_dir)
+        shutil.copy(downloaded_path, RAW_DIR)
 
-    print(f"Files saved to: {raw_dir}")
+    print(f"Files saved to: {RAW_DIR}")

@@ -2,10 +2,8 @@ import numpy as np
 import pandas as pd
 from .logger import get_logger
 
-from .config import (
-    RAW_DIR, PROCESSED_DIR, QUARANTINE_DIR,
-    CURRENT_YEAR, ISBN_REGEX, ASIN_REGEX,
-)
+from src.config.constants import CURRENT_YEAR, ISBN_REGEX, ASIN_REGEX
+from src.config.paths import RAW_DIR, PROCESSED_DIR, QUARANTINE_DIR
 
 
 # LOGGING

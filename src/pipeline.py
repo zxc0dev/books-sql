@@ -3,9 +3,17 @@ from src.validate import run
 from src.download_data import download_data
 from src.logger import get_logger
 from sqlalchemy import create_engine
-from src.config import (DB_CREATED, DOWNLOAD_PATH, SQL_LOAD, SQL_CREATE, ROOT_DIR, SQL_CLEANUP)
+from src.config.config import DB_CREATED
+from src.config.sql import SQL_LOAD, SQL_CLEANUP
+from src.config.constants import DOWNLOAD_PATH
 
 logger = get_logger(__name__)
+
+def _sql_files(directory):
+    return sorted(
+        (p for p in directory.iterdir() if p.name.endswith(".sql")),
+        key=lambda p: p.name,
+    )
 
 def run_pipeline():
     logger.info("=== Pipeline started ===")
@@ -20,13 +28,12 @@ def run_pipeline():
 
     with engine.connect() as conn:
         try:
-
-            for script in sorted(SQL_LOAD.glob("*.sql")):
+            for script in _sql_files(SQL_LOAD):
                 logger.info(f"Executing loading script: {script.name}")
                 execute_sql_file(conn, script)
 
             logger.info("Cleaning up staging...")
-            execute_sql_file(conn, ROOT_DIR / SQL_CLEANUP / "cleanup_staging.sql")
+            execute_sql_file(conn, SQL_CLEANUP / "cleanup_staging.sql")
 
             conn.commit()
             logger.info("=== Pipeline completed successfully ===")
